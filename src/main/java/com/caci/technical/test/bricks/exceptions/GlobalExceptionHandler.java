@@ -12,8 +12,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(FailedOrderException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Error handleFailedOrderException(FailedOrderException ex){
-        return new Error(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+    public Error handleFailedOrderException(FailedOrderException ex) {
+        return new Error(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(OrderNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Error handleOrderNotFoundException(OrderNotFoundException ex) {
+        return new Error(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }

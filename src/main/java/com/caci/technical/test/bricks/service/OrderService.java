@@ -1,6 +1,7 @@
 package com.caci.technical.test.bricks.service;
 
 import com.caci.technical.test.bricks.exceptions.FailedOrderException;
+import com.caci.technical.test.bricks.exceptions.OrderNotFoundException;
 import com.caci.technical.test.bricks.model.Order;
 import com.caci.technical.test.bricks.repository.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -18,13 +19,18 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public Long submitOrder(Order order){
+    public Long submitOrder(Order order) {
         Order savedOrder = getOrderRepository().save(order);
-        return Optional.ofNullable(savedOrder).map(Order::getOrderRef).orElseThrow(()-> new FailedOrderException(ERROR_MSG_FOR_ORDER_FAILURE));
+        return Optional.ofNullable(savedOrder).map(Order::getOrderRef).orElseThrow(() -> new FailedOrderException(ERROR_MSG_FOR_ORDER_FAILURE));
 
     }
 
     public OrderRepository getOrderRepository() {
         return orderRepository;
+    }
+
+    public Optional<Order> findOrderById(long orderRef) throws OrderNotFoundException {
+        return Optional.ofNullable(orderRepository.findById(orderRef)).orElseThrow(() -> new OrderNotFoundException(String.format("Order %s does not exist", orderRef)));
+
     }
 }

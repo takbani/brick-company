@@ -19,8 +19,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -29,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BricksCompanyApplicationTests {
 
     public static final String ORDER_CREATION_ENDPOINT = "/order/create";
+    public static final String FIND_ORDER_BY_ID_ENDPOINT = "/order/1/";
 
 
     @Autowired
@@ -68,6 +75,20 @@ public class BricksCompanyApplicationTests {
                 .content(asJsonString(order))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError());
+    }
+
+
+    @Test
+    public void givenApiCallToGetValidOrderRefThenReturnStatusOk() throws Exception {
+        Order expectedOrder = new Order(1l, 10);
+        Mockito.doReturn(Optional.of(expectedOrder)).when(orderRepository).findById(Mockito.anyLong());
+        this.mockMvc.perform(get(FIND_ORDER_BY_ID_ENDPOINT)).andDo(print()).andExpect(status().isOk());
+    }
+
+    @Test
+    public void givenApiCallToGetInValidOrderRefThenReturnStatusNotFound() throws Exception {
+        Mockito.doReturn(null).when(orderRepository).findById(Mockito.anyLong());
+        this.mockMvc.perform(get(FIND_ORDER_BY_ID_ENDPOINT)).andDo(print()).andExpect(status().isNotFound()).andExpect(content().string(containsString("Order 1 does not exist")));
     }
 
 
