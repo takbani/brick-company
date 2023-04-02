@@ -6,6 +6,9 @@ import com.caci.technical.test.bricks.model.Order;
 import com.caci.technical.test.bricks.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,6 +34,17 @@ public class OrderService {
 
     public Order findOrderById(long orderRef) throws OrderNotFoundException {
         return orderRepository.findById(orderRef).orElseThrow(() -> new OrderNotFoundException(String.format("Order %s does not exist", orderRef)));
+    }
+
+    public List<Order> fetchAllOrders() {
+        List<Order> ordersList = new ArrayList<>();
+        Iterable<Order> orders = orderRepository.findAll();
+        Iterator<Order> orderIterator = orders.iterator();
+        while (orderIterator.hasNext()) {
+            ordersList.add(orderIterator.next());
+        }
+
+        return ordersList;
 
     }
 }

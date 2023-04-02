@@ -13,6 +13,8 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -65,6 +67,18 @@ public class OrderServiceTest {
         Mockito.doReturn(Optional.empty()).when(orderRepository).findById(Mockito.anyLong());
         Order actualOrder = orderService.findOrderById(1l);
         assertEquals(expectedOrder, actualOrder);
+
+    }
+
+    @Test
+    public void givenRequestToFetchAllOrdersThenReturnAllOrders(){
+        Mockito.doReturn(Arrays.asList(new Order(1l,10),new Order(2l,20))).when(orderRepository).findAll();
+        List<Order> orders = orderService.fetchAllOrders();
+        assertEquals(orders.size(), 2);
+        assertTrue(orders.get(0).getOrderRef() == 1l);
+        assertTrue(orders.get(0).getNumberOfBricks() == 10);
+        assertTrue(orders.get(1).getOrderRef()== 2l);
+        assertTrue(orders.get(1).getNumberOfBricks()== 20);
 
     }
 }

@@ -3,7 +3,7 @@ package com.caci.technical.test.bricks.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ORDER_DETAILS" )
+@Table(name = "ORDER_DETAILS")
 public class Order {
 
     @Id
@@ -11,7 +11,7 @@ public class Order {
     @Column(name = "ORDER_REF")
     private Long orderRef;
 
-    @Column(name= "BRICKS_PURCHASED")
+    @Column(name = "BRICKS_PURCHASED")
     private int numberOfBricks;
 
 
@@ -31,7 +31,6 @@ public class Order {
         this.orderRef = orderRef;
         this.numberOfBricks = numberOfBricks;
     }
-
 
 
 }

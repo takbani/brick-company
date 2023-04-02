@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,6 +37,7 @@ public class BricksCompanyApplicationTests {
 
     public static final String ORDER_CREATION_ENDPOINT = "/order/create";
     public static final String FIND_ORDER_BY_ID_ENDPOINT = "/order/1/";
+    public static final String FIND_ALL_ORDERS = "/order/fetchAll";
 
 
     @Autowired
@@ -89,6 +91,12 @@ public class BricksCompanyApplicationTests {
     public void givenApiCallToGetInValidOrderRefThenReturnStatusNotFound() throws Exception {
         Mockito.doReturn(Optional.empty()).when(orderRepository).findById(Mockito.anyLong());
         this.mockMvc.perform(get(FIND_ORDER_BY_ID_ENDPOINT)).andDo(print()).andExpect(status().isNotFound()).andExpect(content().string(containsString("Order 1 does not exist")));
+    }
+
+    @Test
+    public void givenApiCallToGetAllOrdersThenReturnAllOrdersInDB() throws Exception {
+        Mockito.doReturn(Arrays.asList(new Order(1l,10),new Order(2l,20))).when(orderRepository).findAll();
+        this.mockMvc.perform(get(FIND_ALL_ORDERS)).andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString("orderRef")));
     }
 
 
