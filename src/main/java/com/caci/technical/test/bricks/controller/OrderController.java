@@ -33,7 +33,7 @@ public class OrderController {
     }
 
     @GetMapping(value = "/fetchAll", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Order>> submitOrder() {
+    public ResponseEntity<List<Order>> findAllOrders() {
         List<Order> orderList = orderService.fetchAllOrders();
         return ResponseEntity.status(HttpStatus.OK).body(orderList);
     }
