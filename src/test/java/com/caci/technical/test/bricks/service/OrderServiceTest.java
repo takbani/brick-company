@@ -81,4 +81,13 @@ public class OrderServiceTest {
         assertTrue(orders.get(1).getNumberOfBricks()== 20);
 
     }
+
+    @Test
+    public void givenUpdateRequestToExistingOrderRefThenModifyOrder(){
+        Order order = new Order(1l, 5);
+        Mockito.doReturn(new Order(1l,10)).when(orderRepository).save(order);
+        Order updatedOrder = orderService.update(order);
+        assertTrue(updatedOrder.getNumberOfBricks() == 10);
+
+    }
 }

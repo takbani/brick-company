@@ -37,4 +37,10 @@ public class OrderController {
         List<Order> orderList = orderService.fetchAllOrders();
         return ResponseEntity.status(HttpStatus.OK).body(orderList);
     }
+
+    @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Long> updateOrder(@RequestBody Order order) {
+        Order updatedOrder = orderService.update(order);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedOrder.getOrderRef());
+    }
 }

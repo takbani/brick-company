@@ -5,6 +5,7 @@ import com.caci.technical.test.bricks.exceptions.OrderNotFoundException;
 import com.caci.technical.test.bricks.model.Order;
 import com.caci.technical.test.bricks.repository.OrderRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,6 +23,7 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
+    @Transactional
     public Long submitOrder(Order order) {
         Order savedOrder = getOrderRepository().save(order);
         return Optional.ofNullable(savedOrder).map(Order::getOrderRef).orElseThrow(() -> new FailedOrderException(ERROR_MSG_FOR_ORDER_FAILURE));
@@ -46,5 +48,10 @@ public class OrderService {
 
         return ordersList;
 
+    }
+
+    @Transactional
+    public Order update(Order order) {
+        return orderRepository.save(order);
     }
 }
