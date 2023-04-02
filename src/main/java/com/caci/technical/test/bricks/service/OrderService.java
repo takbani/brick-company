@@ -30,17 +30,13 @@ public class OrderService {
 
     }
 
-    public OrderRepository getOrderRepository() {
-        return orderRepository;
-    }
-
     public Order findOrderById(long orderRef) throws OrderNotFoundException {
-        return orderRepository.findById(orderRef).orElseThrow(() -> new OrderNotFoundException(String.format("Order %s does not exist", orderRef)));
+        return getOrderRepository().findById(orderRef).orElseThrow(() -> new OrderNotFoundException(String.format("Order %s does not exist", orderRef)));
     }
 
     public List<Order> fetchAllOrders() {
         List<Order> ordersList = new ArrayList<>();
-        Iterable<Order> orders = orderRepository.findAll();
+        Iterable<Order> orders = getOrderRepository().findAll();
         Iterator<Order> orderIterator = orders.iterator();
         while (orderIterator.hasNext()) {
             ordersList.add(orderIterator.next());
@@ -52,6 +48,10 @@ public class OrderService {
 
     @Transactional
     public Order update(Order order) {
-        return orderRepository.save(order);
+        return getOrderRepository().save(order);
+    }
+
+    public OrderRepository getOrderRepository() {
+        return orderRepository;
     }
 }
