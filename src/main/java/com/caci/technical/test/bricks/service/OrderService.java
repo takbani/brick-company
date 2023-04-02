@@ -29,8 +29,8 @@ public class OrderService {
         return orderRepository;
     }
 
-    public Optional<Order> findOrderById(long orderRef) throws OrderNotFoundException {
-        return Optional.ofNullable(orderRepository.findById(orderRef)).orElseThrow(() -> new OrderNotFoundException(String.format("Order %s does not exist", orderRef)));
+    public Order findOrderById(long orderRef) throws OrderNotFoundException {
+        return orderRepository.findById(orderRef).orElseThrow(() -> new OrderNotFoundException(String.format("Order %s does not exist", orderRef)));
 
     }
 }

@@ -54,8 +54,17 @@ public class OrderServiceTest {
     public void givenValidOrderRefAndOrderExistsThenReturnOrderDetails() throws OrderNotFoundException {
         Order expectedOrder = new Order(1l, 10);
         Mockito.doReturn(Optional.of(expectedOrder)).when(orderRepository).findById(Mockito.anyLong());
-        Optional<Order> actualOrder = orderService.findOrderById(1l);
-        assertEquals(expectedOrder, actualOrder.get());
+        Order actualOrder = orderService.findOrderById(1l);
+        assertEquals(expectedOrder, actualOrder);
+
+    }
+
+    @Test(expected = OrderNotFoundException.class)
+    public void givenInvalidOrderRefThenThrowException() throws OrderNotFoundException {
+        Order expectedOrder = new Order(1l, 10);
+        Mockito.doReturn(Optional.empty()).when(orderRepository).findById(Mockito.anyLong());
+        Order actualOrder = orderService.findOrderById(1l);
+        assertEquals(expectedOrder, actualOrder);
 
     }
 }

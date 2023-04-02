@@ -8,8 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/order")
 public class OrderController {
@@ -28,7 +26,7 @@ public class OrderController {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Order> submitOrder(@PathVariable Long id) throws OrderNotFoundException {
-        Optional<Order> orderReference = orderService.findOrderById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(orderReference.get());
+        Order orderReference = orderService.findOrderById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(orderReference);
     }
 }

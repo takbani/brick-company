@@ -87,7 +87,7 @@ public class BricksCompanyApplicationTests {
 
     @Test
     public void givenApiCallToGetInValidOrderRefThenReturnStatusNotFound() throws Exception {
-        Mockito.doReturn(null).when(orderRepository).findById(Mockito.anyLong());
+        Mockito.doReturn(Optional.empty()).when(orderRepository).findById(Mockito.anyLong());
         this.mockMvc.perform(get(FIND_ORDER_BY_ID_ENDPOINT)).andDo(print()).andExpect(status().isNotFound()).andExpect(content().string(containsString("Order 1 does not exist")));
     }
 
