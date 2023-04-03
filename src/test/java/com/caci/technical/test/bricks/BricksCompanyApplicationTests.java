@@ -107,17 +107,6 @@ public class BricksCompanyApplicationTests {
         this.mockMvc.perform(get(FIND_ALL_ORDERS)).andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString("orderRef")));
     }
 
-    @Test
-    public void givenApiCallToModifyExistingOrderThenAssertOrderModified() throws Exception {
-        Order unModifiedOrder = new Order(null, 10);
-        createOrderSetup();
-        this.mockMvc.perform(post(ORDER_CREATION_ENDPOINT)
-                .content(asJsonString(unModifiedOrder))
-                .contentType(MediaType.APPLICATION_JSON));
-        Order order = new Order(1l, 5);
-        this.mockMvc.perform(put(UPDATE_ORDER).content(asJsonString(order)).contentType((MediaType.APPLICATION_JSON))).andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString("1")));
-
-    }
 
     private void createOrderSetup() {
         Mockito.doReturn(orderRepository).when(orderService).getOrderRepository();

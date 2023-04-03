@@ -15,21 +15,20 @@ public class Order {
     private int numberOfBricks;
 
 
-    public int getNumberOfBricks() {
-        return numberOfBricks;
-    }
-
-    public Long getOrderRef() {
-        return orderRef;
-    }
-
-
     public Order() {
     }
 
     public Order(Long orderRef, int numberOfBricks) {
         this.orderRef = orderRef;
         this.numberOfBricks = numberOfBricks;
+    }
+
+    public int getNumberOfBricks() {
+        return numberOfBricks;
+    }
+
+    public Long getOrderRef() {
+        return orderRef;
     }
 
 

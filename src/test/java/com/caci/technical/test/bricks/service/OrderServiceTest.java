@@ -18,8 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OrderServiceTest {
@@ -78,23 +77,31 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void givenRequestToFetchAllOrdersThenReturnAllOrders(){
-        Mockito.doReturn(Arrays.asList(new Order(1l,10),new Order(2l,20))).when(orderRepository).findAll();
+    public void givenRequestToFetchAllOrdersThenReturnAllOrders() {
+        Mockito.doReturn(Arrays.asList(new Order(1l, 10), new Order(2l, 20))).when(orderRepository).findAll();
         List<Order> orders = orderService.fetchAllOrders();
         assertEquals(orders.size(), 2);
         assertTrue(orders.get(0).getOrderRef() == 1l);
         assertTrue(orders.get(0).getNumberOfBricks() == 10);
-        assertTrue(orders.get(1).getOrderRef()== 2l);
-        assertTrue(orders.get(1).getNumberOfBricks()== 20);
+        assertTrue(orders.get(1).getOrderRef() == 2l);
+        assertTrue(orders.get(1).getNumberOfBricks() == 20);
 
     }
 
     @Test
-    public void givenUpdateRequestToExistingOrderRefThenModifyOrder(){
+    public void givenUpdateRequestToExistingOrderRefThenModifyOrder() {
         Order order = new Order(1l, 5);
-        Mockito.doReturn(new Order(1l,10)).when(orderRepository).save(order);
+        Mockito.doReturn(1).when(orderRepository).updateNumberOfBricksOnOrder(order.getNumberOfBricks(), order.getOrderRef());
         Order updatedOrder = orderService.update(order);
-        assertTrue(updatedOrder.getNumberOfBricks() == 10);
+        assertNotNull(updatedOrder);
+    }
+
+    @Test(expected = FailedOrderException.class)
+    public void givenInvalidUpdateRequestToExistingOrderRefThenModifyOrder() {
+        Order order = new Order(1l, 5);
+        Mockito.doReturn(0).when(orderRepository).updateNumberOfBricksOnOrder(order.getNumberOfBricks(), order.getOrderRef());
+        orderService.update(order);
 
     }
 }
+

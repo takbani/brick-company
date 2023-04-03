@@ -53,7 +53,12 @@ public class OrderService {
 
     @Transactional
     public Order update(Order order) {
-        return getOrderRepository().save(order);
+        int updateSuccess = getOrderRepository().updateNumberOfBricksOnOrder(order.getNumberOfBricks(), order.getOrderRef());
+        if (updateSuccess == 1) {
+            return order;
+        } else {
+            throw new FailedOrderException(String.format("Failed to update order %s", order.getOrderRef()));
+        }
     }
 
     public OrderRepository getOrderRepository() {
