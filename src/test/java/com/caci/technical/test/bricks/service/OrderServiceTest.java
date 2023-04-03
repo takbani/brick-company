@@ -54,7 +54,6 @@ public class OrderServiceTest {
     @Test(expected = InvalidOrderException.class)
     public void givenCreateOrderRequestWithZeroBricksThenThrowException() throws InvalidOrderException {
         Order order = new Order(null, 0);
-        Mockito.doReturn(null).when(orderRepository).save(order);
         orderService.submitOrder(order);
     }
 
