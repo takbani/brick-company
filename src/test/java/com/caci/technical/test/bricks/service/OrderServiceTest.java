@@ -1,6 +1,7 @@
 package com.caci.technical.test.bricks.service;
 
 import com.caci.technical.test.bricks.exceptions.FailedOrderException;
+import com.caci.technical.test.bricks.exceptions.InvalidOrderException;
 import com.caci.technical.test.bricks.exceptions.OrderNotFoundException;
 import com.caci.technical.test.bricks.model.Order;
 import com.caci.technical.test.bricks.repository.OrderRepository;
@@ -36,7 +37,7 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void givenOrderSuccessfullySavedThenReturnSavedOrderRef() {
+    public void givenOrderSuccessfullySavedThenReturnSavedOrderRef() throws InvalidOrderException {
         Order order = new Order(null, 10);
         Mockito.doReturn(new Order(1l, 10)).when(orderRepository).save(order);
         Long actualOrderRef = orderService.submitOrder(order);
@@ -45,12 +46,18 @@ public class OrderServiceTest {
 
 
     @Test(expected = FailedOrderException.class)
-    public void givenOrderSavingFailureThenThrowException() {
+    public void givenOrderSavingFailureThenThrowException() throws InvalidOrderException {
         Order order = new Order(null, 10);
         Mockito.doReturn(null).when(orderRepository).save(order);
         orderService.submitOrder(order);
     }
 
+    @Test(expected = InvalidOrderException.class)
+    public void givenCreateOrderRequestWithZeroBricksThenThrowException() throws InvalidOrderException {
+        Order order = new Order(null, 0);
+        Mockito.doReturn(null).when(orderRepository).save(order);
+        orderService.submitOrder(order);
+    }
 
     @Test
     public void givenValidOrderRefAndOrderExistsThenReturnOrderDetails() throws OrderNotFoundException {

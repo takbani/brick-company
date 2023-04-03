@@ -24,9 +24,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -80,6 +78,15 @@ public class BricksCompanyApplicationTests {
                 .andExpect(status().isInternalServerError());
     }
 
+    @Test
+    public void givenRequestToCreateOrderWithZeroBricksThenAssertBadRequestOnFailure() throws Exception {
+        Order order = new Order(null, 0);
+        this.mockMvc.perform(post(ORDER_CREATION_ENDPOINT)
+                .content(asJsonString(order))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Number of bricks on order cannot be less than zero")));
+    }
 
     @Test
     public void givenApiCallToGetValidOrderRefThenReturnStatusOk() throws Exception {
@@ -96,7 +103,7 @@ public class BricksCompanyApplicationTests {
 
     @Test
     public void givenApiCallToGetAllOrdersThenReturnAllOrdersInDB() throws Exception {
-        Mockito.doReturn(Arrays.asList(new Order(1l,10),new Order(2l,20))).when(orderRepository).findAll();
+        Mockito.doReturn(Arrays.asList(new Order(1l, 10), new Order(2l, 20))).when(orderRepository).findAll();
         this.mockMvc.perform(get(FIND_ALL_ORDERS)).andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString("orderRef")));
     }
 

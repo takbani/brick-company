@@ -1,6 +1,7 @@
 package com.caci.technical.test.bricks.service;
 
 import com.caci.technical.test.bricks.exceptions.FailedOrderException;
+import com.caci.technical.test.bricks.exceptions.InvalidOrderException;
 import com.caci.technical.test.bricks.exceptions.OrderNotFoundException;
 import com.caci.technical.test.bricks.model.Order;
 import com.caci.technical.test.bricks.repository.OrderRepository;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class OrderService {
 
     public static final String ERROR_MSG_FOR_ORDER_FAILURE = "An error occurred while saving the order";
+    public static final String INVALID_ORDER_PAYLOAD_MSG = "Number of bricks on order cannot be less than zero";
 
     private OrderRepository orderRepository;
 
@@ -24,7 +26,10 @@ public class OrderService {
     }
 
     @Transactional
-    public Long submitOrder(Order order) {
+    public Long submitOrder(Order order) throws InvalidOrderException {
+        if (order.getNumberOfBricks() <= 0) {
+            throw new InvalidOrderException(INVALID_ORDER_PAYLOAD_MSG);
+        }
         Order savedOrder = getOrderRepository().save(order);
         return Optional.ofNullable(savedOrder).map(Order::getOrderRef).orElseThrow(() -> new FailedOrderException(ERROR_MSG_FOR_ORDER_FAILURE));
 

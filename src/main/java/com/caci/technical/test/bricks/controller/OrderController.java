@@ -1,5 +1,6 @@
 package com.caci.technical.test.bricks.controller;
 
+import com.caci.technical.test.bricks.exceptions.InvalidOrderException;
 import com.caci.technical.test.bricks.exceptions.OrderNotFoundException;
 import com.caci.technical.test.bricks.model.Order;
 import com.caci.technical.test.bricks.service.OrderService;
@@ -21,7 +22,7 @@ public class OrderController {
     }
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Long> submitOrder(@RequestBody Order order) {
+    public ResponseEntity<Long> submitOrder(@RequestBody Order order) throws InvalidOrderException {
         Long orderReference = orderService.submitOrder(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(orderReference);
     }
